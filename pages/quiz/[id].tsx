@@ -1,5 +1,13 @@
+import HeadContainer from "../components/Head";
+
 const Room = () => {
-  return <div>Enter</div>;
+  return (
+    <>
+      <HeadContainer>Quiz</HeadContainer>;
+    </>
+  );
 };
+
+export async function getStaticPaths() {}
 
 export default Room;
