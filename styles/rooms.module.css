@@ -14,23 +14,34 @@
   font-size: 1em;
   text-transform: uppercase;
 }
+.number_th,
+.id_th,
+.amount_th,
+.user_th,
 .number,
 .id,
 .amount,
 .user {
   padding: 10px;
 }
+.number_th,
 .number {
   width: 50px;
 }
+.id_th,
 .id {
   width: 350px;
 }
+.id {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.amount_th,
+.user_th,
 .amount,
 .user {
   width: 100px;
 }
 .tbody {
   height: 40px;
-  cursor: pointer;
 }

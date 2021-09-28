@@ -1,5 +1,6 @@
-import HeadContainer from "../components/Head";
 import styles from "../styles/rooms.module.css";
+import HeadContainer from "./components/Head";
+import Link from "next/link";
 
 const Rooms = ({ quizzes }: any) => {
   let counter = quizzes.length;
@@ -9,10 +10,10 @@ const Rooms = ({ quizzes }: any) => {
       <table className={styles.table}>
         <thead>
           <tr className={styles.tr}>
-            <th className={styles.number}>#</th>
-            <th className={styles.id}>ID</th>
-            <th className={styles.amount}>Questions</th>
-            <th className={styles.user}>Submitter</th>
+            <th className={styles.number_th}>#</th>
+            <th className={styles.id_th}>ID</th>
+            <th className={styles.amount_th}>Questions</th>
+            <th className={styles.user_th}>Submitter</th>
           </tr>
         </thead>
         {quizzes
@@ -22,7 +23,11 @@ const Rooms = ({ quizzes }: any) => {
             <tbody key={quiz._id} className={styles.tbody}>
               <tr>
                 <td className={styles.number}>{counter--}</td>
-                <td className={styles.id}>{quiz._id}</td>
+                <td className={styles.id}>
+                  <Link href={"/quiz/" + quiz._id}>
+                    <a>{quiz._id}</a>
+                  </Link>
+                </td>
                 <td className={styles.amount}>{quiz.question.length}</td>
                 <td className={styles.user}>{quiz.username}</td>
               </tr>
@@ -33,7 +38,7 @@ const Rooms = ({ quizzes }: any) => {
   );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   let res: Response = await fetch("http://localhost:8100/list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

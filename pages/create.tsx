@@ -1,6 +1,6 @@
 import styles from "../styles/create.module.css";
-import HeadContainer from "../components/Head";
-import Button from "../components/Button";
+import HeadContainer from "./components/Head";
+import Button from "./components/Button";
 import { useState } from "react";
 
 const Create = ({ loaded }: any) => {

@@ -20,6 +20,14 @@ app.prepare().then(() => {
   server.use(cors());
   server.use(express.json());
 
+  server.post("/login", (req, res) => {
+    getUser(req.body.username).then(function (data) {
+      if (data == req.body.username) {
+        res.send(data);
+      }
+    });
+  });
+
   server.post("/save", (req, res) => {
     getQuiz(req.body.username).then(function (data) {
       if (data != "noGet") {

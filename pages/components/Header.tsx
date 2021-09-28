@@ -13,7 +13,7 @@ const Header = () => {
           <a title="Create a Quiz">Create</a>
         </Link>
         <Link href="/rooms">
-          <a title="Join a Quiz">Join</a>
+          <a title="Join a Quiz">Rooms</a>
         </Link>
         <Link href="/">
           <a title="Home">Home</a>
