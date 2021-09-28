@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Passero+One&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-family: "Lato", sans-serif;
+  letter-spacing: 1px;
+}
+html {
+  background: #171719;
+  height: 100%;
+  font-size: 20px;
+}
+body {
+  height: 100%;
+}
+main {
+  text-align: center;
+}
+footer {
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+}
+a:visited,
+a {
+  text-decoration: none;
+  color: white;
+  margin: 0 50px 0 0;
+}
+.menuContainer {
+  z-index: 1;
+  background-color: #171719;
+  position: fixed;
+  display: flex;
+  width: 100%;
+  padding: 1% 0 1% 0;
+}
+.logo {
+  font-family: "Passero One", cursive;
+  padding-left: 50px;
+  font-size: 40px;
+}
+.menu {
+  margin: auto 0;
+  margin-left: auto;
+}
