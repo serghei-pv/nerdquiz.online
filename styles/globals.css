@@ -47,15 +47,6 @@ a {
   margin: auto 0;
   margin-left: auto;
 }
-.btn {
-  width: 100px;
-  height: 50px;
-  border: 2px solid black;
-  border-radius: 5px 5px 5px 5px;
-  color: white;
-  cursor: pointer;
-  background-color: #262626;
-}
 .modalLogin {
   background-color: #171719ce;
   z-index: 2;

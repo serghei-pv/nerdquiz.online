@@ -2,6 +2,7 @@ import styles from "../styles/create.module.css";
 import HeadContainer from "./components/Head";
 import Button from "./components/Button";
 import { useState } from "react";
+import { GetStaticProps } from "next";
 
 const Create = ({ loaded }: any) => {
   let slotArray: any[] = [];
@@ -103,7 +104,7 @@ const Create = ({ loaded }: any) => {
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   let res: Response = await fetch("http://localhost:8100/load", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -116,6 +117,6 @@ export async function getStaticProps() {
   return {
     props: { loaded },
   };
-}
+};
 
 export default Create;

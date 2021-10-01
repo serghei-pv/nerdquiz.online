@@ -1,6 +1,7 @@
 import styles from "../styles/rooms.module.css";
 import HeadContainer from "./components/Head";
 import Link from "next/link";
+import { GetServerSideProps } from "next";
 
 const Rooms = ({ quizzes }: any) => {
   let counter = quizzes.length;
@@ -38,19 +39,16 @@ const Rooms = ({ quizzes }: any) => {
   );
 };
 
-export async function getServerSideProps() {
-  let res: Response = await fetch("http://localhost:8100/list", {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res: Response = await fetch("http://localhost:8100/list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "Tim",
-    }),
   });
-  let quizzes = await res.json();
+  const data = await res.json();
 
   return {
-    props: { quizzes },
+    props: { quizzes: data },
   };
-}
+};
 
 export default Rooms;

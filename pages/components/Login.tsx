@@ -36,7 +36,8 @@ const Login = () => {
       {!login && (
         <section className={"modalLogin"}>
           <form className="modalLoginContent">
-            <input type="text" placeholder="Username" name="username" className="loginInput" />
+            <label>Username</label>
+            <input type="text" name="username" className="loginInput" />
             <Button title="Continue" className="btn" onClick={handleClick} />
           </form>
         </section>
