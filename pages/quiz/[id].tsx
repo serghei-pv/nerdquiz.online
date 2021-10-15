@@ -44,48 +44,53 @@ const Room = ({ quiz }: any) => {
     }
   }, [quiz._id, quiz.id, quiz.username]);
 
-  const handleAnswer = () => {
+  function handleAnswer(): void {
     let formData: FormData = new FormData(document.forms[0]);
-    socket.send(
-      JSON.stringify({
-        type: "answer",
-        roomnumber: quiz._id,
-        username: sessionStorage.getItem("username"),
-        answer: formData.get("answer"),
-      })
-    );
-  };
+    let answerLength: number = formData.get("answer")?.toString().length!;
+    if (answerLength > 0) {
+      socket.send(
+        JSON.stringify({
+          type: "answer",
+          roomnumber: quiz._id,
+          username: sessionStorage.getItem("username"),
+          answer: formData.get("answer"),
+        })
+      );
+    } else {
+      console.log("Please fill out the answer field");
+    }
+  }
 
-  const clear = (e: any) => {
+  function clear(e: any): void {
     if (!lock) {
       setTextValue(e.target.value);
     }
-  };
+  }
 
-  const unlockAll = () => {
+  function unlockAll(): void {
     socket.send(
       JSON.stringify({
         type: "continue",
         roomnumber: quiz._id,
       })
     );
-  };
+  }
 
-  const subPoint = (username: string) => {
+  function subPoint(username: string): void {
     socket.send(JSON.stringify({ type: "change", roomnumber: quiz._id, username: username, points: -1 }));
-  };
-  const subHalfPoint = (username: string) => {
+  }
+  function subHalfPoint(username: string): void {
     socket.send(JSON.stringify({ type: "change", roomnumber: quiz._id, username: username, points: -0.5 }));
-  };
-  const unlockAnswer = (username: string) => {
+  }
+  function unlockAnswer(username: string): void {
     socket.send(JSON.stringify({ type: "change", roomnumber: quiz._id, username: username, lock: "false" }));
-  };
-  const addHalfPoint = (username: string) => {
+  }
+  function addHalfPoint(username: string): void {
     socket.send(JSON.stringify({ type: "change", roomnumber: quiz._id, username: username, points: +0.5 }));
-  };
-  const addPoint = (username: string) => {
+  }
+  function addPoint(username: string): void {
     socket.send(JSON.stringify({ type: "change", roomnumber: quiz._id, username: username, points: +1 }));
-  };
+  }
 
   useEffect(() => {
     socket.on("update", (message) => {
@@ -188,7 +193,7 @@ const Room = ({ quiz }: any) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch("http://localhost:8100/list", {
+  const res: Response = await fetch("http://localhost:8100/list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -208,7 +213,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context: any) => {
   const id = context.params.id;
-  const res = await fetch("http://localhost:8100/list/", {
+  const res: Response = await fetch("http://localhost:8100/list/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

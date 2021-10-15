@@ -1,26 +1,31 @@
-const express = require("express");
-const next = require("next");
-const mongo = require("mongodb");
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
+import * as Mongo from "mongodb";
+import * as Http from "http";
+import Express from "express";
+import Next from "next";
+import Cors from "cors";
+import { NextServer } from "next/dist/server/next";
+import { Server } from "socket.io";
+import { Quiz, Participant } from "./interface";
 
-const port = parseInt(process.env.PORT, 10) || 8100;
-const dev = process.env.NODE_ENV !== "production";
-const nextApp = next({ dev });
+const port: number = parseInt(process.env.PORT || "8100", 10);
+const dev: boolean = process.env.NODE_ENV !== "production";
+const nextApp: NextServer = Next({ dev });
 const handle = nextApp.getRequestHandler();
-const dbURL = "mongodb+srv://userGIS:GISecure@clusterraster.u3qcg.mongodb.net";
-const dbClient = new mongo.MongoClient(dbURL);
+const dbURL: string = "mongodb+srv://userGIS:GISecure@clusterraster.u3qcg.mongodb.net";
+const dbClient: Mongo.MongoClient = new Mongo.MongoClient(dbURL);
 
 connectToDb();
 
-let userbase, quiz, winner;
-let participantsArray = [];
+let userbase: Mongo.Collection;
+let quiz: Mongo.Collection;
+let winner: Mongo.Collection;
+let allQuizzes: Quiz[];
+let participantsArray: Participant[] = [];
 
 nextApp.prepare().then(() => {
-  const app = express();
-  app.use(cors());
-  app.use(express.json());
+  const app = Express();
+  app.use(Cors());
+  app.use(Express.json());
 
   app.post("/register", (req, res) => {
     userbase.insertOne({
@@ -60,8 +65,8 @@ nextApp.prepare().then(() => {
     });
   });
 
-  app.post("/load", (req, res) => {
-    getQuizQA(req.body.username).then(function (data) {
+  app.post("/load", (_req, res) => {
+    getQuizQA().then(function (data) {
       if (data != "noGet") {
         res.send(JSON.stringify(data));
       } else {
@@ -84,8 +89,8 @@ nextApp.prepare().then(() => {
     });
   });
 
-  const server = http.createServer(app);
-  const io = new Server(server, {
+  const server: Http.Server = Http.createServer(app);
+  const io: Server = new Server(server, {
     cors: {
       allowedHeaders: ["*"],
     },
@@ -101,7 +106,7 @@ nextApp.prepare().then(() => {
           break;
 
         case "participant":
-          let counter = 0;
+          let counter: number = 0;
           socket.join(data.roomnumber);
 
           for (let key in participantsArray) {
@@ -138,7 +143,6 @@ nextApp.prepare().then(() => {
           }
           break;
 
-        //
         case "change":
           for (let key in participantsArray) {
             if (data.username == participantsArray[key].username) {
@@ -163,7 +167,7 @@ nextApp.prepare().then(() => {
           break;
 
         case "winner":
-          let leader = {
+          let leader: Participant = {
             username: "",
             points: 0,
             answer: "",
@@ -184,7 +188,14 @@ nextApp.prepare().then(() => {
           break;
       }
 
-      io.to(data.roomnumber).emit("update", JSON.stringify(participantsArray));
+      let localParticipantsArray: Participant[] = [];
+      for (let key in participantsArray) {
+        if (data.roomnumber == participantsArray[key].roomnumber) {
+          localParticipantsArray.push(participantsArray[key]);
+        }
+      }
+
+      io.to(data.roomnumber).emit("update", JSON.stringify(localParticipantsArray));
     });
   });
 
@@ -200,9 +211,9 @@ async function connectToDb() {
   winner = dbClient.db("nerdquiz").collection("misc");
 }
 
-async function getUser(username) {
+async function getUser(username: string) {
   try {
-    let findUser = await userbase.findOne({
+    let findUser: Mongo.Document = <Mongo.Document>await userbase.findOne({
       username: username,
     });
     return [findUser.username, findUser.password];
@@ -211,9 +222,9 @@ async function getUser(username) {
   }
 }
 
-async function getQuiz(username) {
+async function getQuiz(username: string) {
   try {
-    let findQuiz = await quiz.findOne({
+    let findQuiz: Mongo.Document = <Mongo.Document>await quiz.findOne({
       username: username,
       ready: "false",
     });
@@ -223,13 +234,13 @@ async function getQuiz(username) {
   }
 }
 
-async function getQuizQA(username) {
+async function getQuizQA() {
   try {
-    let findQuiz = await quiz.findOne({
-      username: username,
+    let findQuiz: Mongo.Document = <Mongo.Document>quiz.find({
       ready: "false",
     });
-    return [findQuiz.question, findQuiz.answer];
+    let unfinishedQuiz: Quiz[] = await findQuiz.toArray();
+    return unfinishedQuiz;
   } catch (e) {
     return "noGet";
   }
@@ -237,12 +248,13 @@ async function getQuizQA(username) {
 
 async function getQuizAll() {
   try {
-    let findQuiz = quiz.find({
+    let findQuiz: Mongo.Document = <Mongo.Document>quiz.find({
       ready: "true",
     });
     allQuizzes = await findQuiz.toArray();
     return allQuizzes;
   } catch (e) {
-    return "noGet";
+    let noGet: Quiz[] = [];
+    return noGet;
   }
 }

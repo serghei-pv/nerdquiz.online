@@ -1,0 +1,23 @@
+.container {
+  z-index: 1;
+  position: fixed;
+  display: flex;
+  width: 100%;
+  padding: 1% 0 1% 0;
+}
+.logo {
+  font-family: "Passero One", cursive;
+  padding-left: 50px;
+  font-size: 40px;
+}
+.logo:hover {
+  color: white;
+}
+.logoSpan {
+  font-family: "Passero One", cursive;
+  color: #ffbd52;
+}
+.menu {
+  margin: auto 0;
+  margin-left: auto;
+}

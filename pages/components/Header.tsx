@@ -1,14 +1,15 @@
 import Link from "next/link";
+import styles from "../../styles/header.module.css";
 
 const Header = () => {
   return (
-    <header className="menuContainer">
+    <header className={styles.container}>
       <Link href="/">
-        <a title="Home" className="logo">
-          nerdQuiz
+        <a title="Home" className={styles.logo}>
+          nerd<span className={styles.logoSpan}>Quiz</span>
         </a>
       </Link>
-      <nav className="menu">
+      <nav className={styles.menu}>
         <Link href="/create">
           <a title="Create a Quiz">Create</a>
         </Link>

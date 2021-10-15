@@ -4,7 +4,7 @@ import Link from "next/link";
 import { GetServerSideProps } from "next";
 
 const Rooms = ({ quizzes }: any) => {
-  let counter = quizzes.length;
+  let counter: number = quizzes.length;
   return (
     <>
       <HeadContainer>Rooms</HeadContainer>
