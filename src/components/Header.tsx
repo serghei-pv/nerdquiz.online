@@ -1,7 +1,7 @@
 import Link from "next/link";
-import styles from "../../styles/header.module.css";
+import styles from "../styles/header.module.css";
 
-const Header = () => {
+function Header(): React.ReactElement {
   return (
     <header className={styles.container}>
       <Link href="/">
@@ -22,6 +22,6 @@ const Header = () => {
       </nav>
     </header>
   );
-};
+}
 
 export default Header;

@@ -12,6 +12,7 @@ html {
   background-image: linear-gradient(45deg, #101011 46%, #171719 100%);
   background-attachment: fixed;
   height: 100%;
+  width: 100%;
   font-size: 20px;
 }
 body {
@@ -33,4 +34,47 @@ a:visited {
 }
 a:hover {
   color: #ffbd52;
+}
+.container404 {
+  width: 100%;
+}
+.question404,
+.answer404,
+.info404 {
+  text-align: center;
+  padding: 0 2vw;
+  font-size: 5vh;
+}
+.question404 {
+  margin: 10vh 0;
+}
+.answer404 {
+  color: #4bad71;
+}
+.info404 {
+  margin-top: 10vh;
+  font-size: 20px;
+}
+
+@media only screen and (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+  a,
+  a:visited {
+    margin: 0 5vw 0 0;
+  }
+  .question404,
+  .answer404 {
+    font-size: 5vw;
+  }
+  .info404 {
+    margin-top: 10vh;
+    font-size: 15px;
+  }
+}
+@media only screen and (max-width: 300px) {
+  html {
+    font-size: 12px;
+  }
 }

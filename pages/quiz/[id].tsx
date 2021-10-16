@@ -1,15 +1,14 @@
-import { GetStaticPaths, GetStaticProps } from "next";
 import { useEffect, useState } from "react";
-import Button from "../components/Button";
-import HeadContainer from "../components/Head";
-import styles from "../../styles/quiz.module.css";
+import Button from "../../src/components/Button";
+import HeadContainer from "../../src/components/Head";
+import styles from "../../src/styles/quiz.module.css";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 let participantArray: any[] = [];
 
-const Room = ({ quiz }: any) => {
+function Room({ quiz }: any): React.ReactElement {
   const [creator, setCreator] = useState(false);
   const [question, setQuestion] = useState(0);
   const [participants, setParticipants] = useState(participantArray);
@@ -190,9 +189,9 @@ const Room = ({ quiz }: any) => {
       )}
     </>
   );
-};
+}
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export async function getStaticPaths(): Promise<any> {
   const res: Response = await fetch("http://localhost:8100/list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -209,9 +208,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths,
     fallback: false,
   };
-};
+}
 
-export const getStaticProps: GetStaticProps = async (context: any) => {
+export async function getStaticProps(context: any): Promise<any> {
   const id = context.params.id;
   const res: Response = await fetch("http://localhost:8100/list/", {
     method: "POST",
@@ -225,6 +224,6 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
   return {
     props: { quiz: data },
   };
-};
+}
 
 export default Room;

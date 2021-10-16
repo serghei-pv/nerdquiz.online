@@ -106,31 +106,34 @@ nextApp.prepare().then(() => {
           break;
 
         case "participant":
-          let counter: number = 0;
-          socket.join(data.roomnumber);
+          console.log(data.username);
+          if (data.username != null) {
+            let counter: number = 0;
+            socket.join(data.roomnumber);
 
-          for (let key in participantsArray) {
-            if (participantsArray[key].username == data.username) {
-              counter++;
-              if (counter == 1 && participantsArray[key].roomnumber != data.roomnumber) {
-                participantsArray[key] = {
-                  username: data.username,
-                  points: 0,
-                  answer: "",
-                  roomnumber: data.roomnumber,
-                  lock: "false",
-                };
+            for (let key in participantsArray) {
+              if (participantsArray[key].username == data.username) {
+                counter++;
+                if (counter == 1 && participantsArray[key].roomnumber != data.roomnumber) {
+                  participantsArray[key] = {
+                    username: data.username,
+                    points: 0,
+                    answer: "",
+                    roomnumber: data.roomnumber,
+                    lock: "false",
+                  };
+                }
               }
             }
-          }
-          if (counter == 0) {
-            participantsArray.push({
-              username: data.username,
-              points: 0,
-              answer: "",
-              roomnumber: data.roomnumber,
-              lock: "false",
-            });
+            if (counter == 0) {
+              participantsArray.push({
+                username: data.username,
+                points: 0,
+                answer: "",
+                roomnumber: data.roomnumber,
+                lock: "false",
+              });
+            }
           }
           break;
 

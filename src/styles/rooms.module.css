@@ -1,0 +1,78 @@
+.fixed {
+  background-image: linear-gradient(-45deg, #101011 46%, #171719 100%);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  height: 50vh;
+  margin: 0 20%;
+  margin-top: 100px;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+.fixed::-webkit-scrollbar {
+  display: none;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
+  border-spacing: 0 2px;
+}
+.tbody {
+  height: 40px;
+  cursor: pointer;
+}
+.tbody:hover {
+  background-color: #171719;
+}
+.tr {
+  position: sticky;
+  background-image: linear-gradient(-45deg, #101011 46%, #171719 100%);
+  top: 0;
+  height: 50px;
+  padding-bottom: 5%;
+  text-transform: uppercase;
+}
+.id_th,
+.amount_th,
+.user_th {
+  color: #ffbd52;
+}
+.id_th,
+.amount_th,
+.user_th,
+.id,
+.amount,
+.user {
+  padding: 1%;
+}
+.user_th,
+.amount_th,
+.user,
+.amount {
+  text-align: center;
+}
+.id_th,
+.id {
+  width: 50%;
+}
+
+@media only screen and (max-width: 1024px) {
+  .fixed {
+    height: 70vh;
+    width: 96vw;
+    margin: 2vw;
+    margin-top: 100px;
+  }
+  .id_th,
+  .id {
+    width: 60%;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .amount_th,
+  .amount {
+    display: none;
+  }
+}

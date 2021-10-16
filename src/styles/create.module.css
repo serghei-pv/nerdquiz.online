@@ -1,7 +1,7 @@
 .footer {
   display: flex;
   justify-content: center;
-  padding: 10px 0 10px 0;
+  padding: 0.5vw 0;
   background-color: #101011;
 }
 .btn {
@@ -14,16 +14,15 @@
   background-color: #262626;
 }
 .slot {
-  margin: 0 0 20px 0;
+  margin-bottom: 20px;
   padding-left: 10px;
   border-left: 3px solid #ffbd52;
-}
-.span {
-  margin-left: 57%;
 }
 .question,
 .answer {
   height: 24px;
+  width: 100%;
+  margin: 10px 0;
   resize: none;
   background: #000000;
   color: white;
@@ -31,19 +30,17 @@
   outline: none;
   border: none;
 }
-.question {
-  width: 100%;
-  margin: 10px 0 10px 0;
-}
-.answer {
-  width: 35%;
-  float: right;
-}
 .form {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 60%;
   margin: auto;
-  padding: 100px 0 200px 0;
+  padding-top: 50px;
+  padding-bottom: 200px;
+}
+@media only screen and (max-width: 1024px) {
+  .form {
+    width: 90%;
+  }
 }

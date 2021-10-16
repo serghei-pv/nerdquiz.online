@@ -1,48 +1,36 @@
-import styles from "../styles/create.module.css";
-import HeadContainer from "./components/Head";
-import Button from "./components/Button";
-import { useState } from "react";
-import { GetStaticProps } from "next";
+import styles from "../src/styles/create.module.css";
+import HeadContainer from "../src/components/Head";
+import Button from "../src/components/Button";
+import Slot from "../src/components/Slot";
+import { useEffect, useState } from "react";
+import getUsername from "../src/hooks/getUsername";
 
-const Create = ({ myQuiz }: any) => {
+function Create({ myQuiz }: any): React.ReactElement {
   let slotArray: any[] = [];
   let slot: number = slotArray.length;
-  myQuiz = myQuiz[0];
 
   const [slots, setSlots] = useState(slot);
+  const [username, setUsername] = useState("");
 
-  if (slots == 0 && myQuiz != undefined) {
-    for (slot; slot < myQuiz.question.length; slot++) {
-      slotArray.push(
-        <div key={slot.toString()} className={styles.slot}>
-          <div className={styles.numberArea}>{slot + 1}</div>
-          <textarea className={styles.question} name="question" defaultValue={myQuiz.question[slot]}></textarea>
-          <textarea className={styles.answer} name="answer" defaultValue={myQuiz.answer[slot]}></textarea>
-        </div>
-      );
+  useEffect(() => {
+    setUsername(getUsername());
+  }, []);
+
+  for (let i: number = 0; i < myQuiz.length; i++) {
+    if (myQuiz[i].username == username) {
+      myQuiz = myQuiz[i];
+      for (slot; slot < myQuiz.question.length; slot++) {
+        slotArray.push(<Slot key={slot.toString()} slot={slot} question={myQuiz.question[slot]} answer={myQuiz.answer[slot]}></Slot>);
+      }
     }
   }
 
   for (slot; slot < slots; slot++) {
-    slotArray.push(
-      <div key={slot.toString()} className={styles.slot}>
-        <div className={styles.numberArea}>Question {slot + 1}:</div>
-        <textarea className={styles.question} name="question"></textarea>
-        <span className={styles.span}>Answer:</span>
-        <textarea className={styles.answer} name="answer"></textarea>
-      </div>
-    );
+    slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
-
   if (slot == 0) {
     setSlots(slot + 1);
-    slotArray.push(
-      <div key={slot.toString()} className={styles.slot}>
-        <div className={styles.numberArea}>{slot + 1}</div>
-        <textarea className={styles.question} name="question"></textarea>
-        <textarea className={styles.answer} name="answer"></textarea>
-      </div>
-    );
+    slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
 
   function saveQuiz(): void {
@@ -60,26 +48,27 @@ const Create = ({ myQuiz }: any) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // username: sessionStorage.getItem("username"),
-          username: "Serghei",
+          username: username,
           ready: "false",
           question: formData.getAll("question"),
           answer: formData.getAll("answer"),
         }),
       });
       let response = await res.text();
+      console.log(response);
     } else if (type == "create") {
       let res: Response = await fetch("http://localhost:8100/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: "Serghei",
+          username: username,
           ready: "true",
           question: formData.getAll("question"),
           answer: formData.getAll("answer"),
         }),
       });
       let response = await res.text();
+      console.log(response);
     }
   }
   return (
@@ -101,9 +90,9 @@ const Create = ({ myQuiz }: any) => {
       </footer>
     </>
   );
-};
+}
 
-export const getStaticProps: GetStaticProps = async () => {
+export async function getStaticProps(): Promise<any> {
   let res: Response = await fetch("http://localhost:8100/load", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -113,6 +102,6 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: { myQuiz },
   };
-};
+}
 
 export default Create;

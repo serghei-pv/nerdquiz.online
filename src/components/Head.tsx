@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-const HeadContainer = ({ children }: any) => {
+function HeadContainer({ children }: any): React.ReactElement {
   return (
     <Head>
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -12,6 +12,6 @@ const HeadContainer = ({ children }: any) => {
       <link rel="manifest" href="../../site.webmanifest" />
     </Head>
   );
-};
+}
 
 export default HeadContainer;

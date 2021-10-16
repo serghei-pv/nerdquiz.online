@@ -1,7 +1,7 @@
 import Header from "./Header";
 import Login from "./Login";
 
-const Layout = ({ children }: any) => {
+function Layout({ children }: any): React.ReactElement {
   return (
     <>
       <Header />
@@ -9,6 +9,6 @@ const Layout = ({ children }: any) => {
       {children}
     </>
   );
-};
+}
 
 export default Layout;

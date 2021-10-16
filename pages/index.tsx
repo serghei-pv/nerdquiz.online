@@ -1,5 +1,5 @@
-import HeadContainer from "./components/Head";
+import HeadContainer from "../src/components/Head";
 
-export default function Home() {
+export default function Home(): React.ReactElement {
   return <HeadContainer>Home</HeadContainer>;
 }
