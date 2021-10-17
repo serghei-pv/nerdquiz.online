@@ -35,6 +35,17 @@
   -o-animation: fadeIn forwards 1s;
   -ms-animation: fadeIn forwards 1s;
 }
+.modalText {
+  font-size: 30px;
+  text-align: center;
+  color: #ffbd52;
+  background-color: #101011;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  margin-bottom: calc(50px + 0.5vh);
+  padding: 25px;
+}
 @keyframes fadeIn {
   from {
     top: -50px;

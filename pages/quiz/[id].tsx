@@ -4,6 +4,8 @@ import HeadContainer from "../../src/components/Head";
 import styles from "../../src/styles/quiz.module.css";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
+import Winner from "../../src/components/Winner";
+import getUsername from "../../src/hooks/getUsername";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 let participantArray: any[] = [];
@@ -13,18 +15,21 @@ function Room({ quiz }: any): React.ReactElement {
   const [question, setQuestion] = useState(0);
   const [participants, setParticipants] = useState(participantArray);
   const [points, setPoints] = useState(0);
+  const [winner, setWinner] = useState(false);
   const [lock, setLock] = useState(false);
   const [textValue, setTextValue] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    socket = io("http://localhost:8100");
+    let url: string = process.env.serverHost!;
+    socket = io(url);
     return function cleanup() {
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    if (sessionStorage.getItem("username") == quiz.username) {
+    if (getUsername() == quiz.username) {
       setCreator(true);
       socket.send(
         JSON.stringify({
@@ -36,7 +41,7 @@ function Room({ quiz }: any): React.ReactElement {
       socket.send(
         JSON.stringify({
           type: "participant",
-          username: sessionStorage.getItem("username"),
+          username: getUsername(),
           roomnumber: quiz._id,
         })
       );
@@ -51,18 +56,34 @@ function Room({ quiz }: any): React.ReactElement {
         JSON.stringify({
           type: "answer",
           roomnumber: quiz._id,
-          username: sessionStorage.getItem("username"),
+          username: getUsername(),
           answer: formData.get("answer"),
         })
       );
     } else {
-      console.log("Please fill out the answer field");
+      setError(true);
     }
   }
+  function endQuiz(): void {
+    socket.send(
+      JSON.stringify({
+        type: "winner",
+        roomnumber: quiz._id,
+      })
+    );
+  }
 
-  function clear(e: any): void {
+  function clearLock(e: any): void {
     if (!lock) {
       setTextValue(e.target.value);
+    }
+    if (error) {
+      setError(false);
+    }
+  }
+  function clearError(): void {
+    if (error) {
+      setError(false);
     }
   }
 
@@ -109,6 +130,9 @@ function Room({ quiz }: any): React.ReactElement {
           }
         }
       }
+    });
+    socket.on("winner", () => {
+      setWinner(true);
     });
     return function cleanup() {
       socket.off("update");
@@ -159,40 +183,70 @@ function Room({ quiz }: any): React.ReactElement {
             </section>
           </main>
           <footer className={styles.footer}>
-            <Button className={styles.btn} title="Last" onClick={() => (question == 0 ? console.log("no!") : setQuestion(question - 1))} />
+            {question > 0 ? (
+              <Button className={styles.btn} title="Last" onClick={() => setQuestion(question - 1)} />
+            ) : (
+              <Button className={styles.btn} title="Locked" />
+            )}
             <div className={styles.counter}>
               {question + 1} / {quiz.question.length}
             </div>
-            <Button
-              className={styles.btn}
-              title="Next"
-              onClick={() => {
-                question + 1 == quiz.question.length ? console.log("no!") : setQuestion(question + 1);
-                unlockAll();
-              }}
-            />
+            {question + 1 == quiz.question.length ? (
+              <Button
+                className={styles.btn}
+                title="End"
+                onClick={() => {
+                  endQuiz();
+                }}
+              />
+            ) : (
+              <Button
+                className={styles.btn}
+                title="Next"
+                onClick={() => {
+                  setQuestion(question + 1);
+                  unlockAll();
+                }}
+              />
+            )}
           </footer>
         </>
       ) : (
         <>
           <HeadContainer>Quiz - Participant</HeadContainer>
           <section className={styles.participant}>
+            <p className={styles.p}>
+              You made <span className={styles.participantSpan}>{points}</span>
+              {points == 1 ? " point " : " points "} in&#160;
+              <span className={styles.participantSpan}>{quiz.question.length}</span>
+              {quiz.question.length == 1 ? " question " : " questions "}
+            </p>
             <form className={styles.form}>
-              <textarea className={lock ? styles.lockedText : styles.textarea} name="answer" value={textValue} onChange={clear}></textarea>
-              <Button className={lock ? styles.lockedBtn : styles.btn} type="button" title="Answer" onClick={handleAnswer} />
-              <p className={styles.p}>
-                {points} / {quiz.question.length}
-              </p>
+              <textarea
+                className={!error ? (lock ? styles.lockedText : styles.textarea) : styles.error}
+                name="answer"
+                value={error ? "Please fill out the answer field" : textValue}
+                onChange={clearLock}
+                onClick={clearError}
+              ></textarea>
+              {error ? (
+                <Button className={styles.participantBtnError} type="button" title="Locked" />
+              ) : lock ? (
+                <Button className={styles.participantBtnLocked} type="button" title="Locked In" />
+              ) : (
+                <Button className={styles.participantBtn} type="button" title="Answer" onClick={handleAnswer} />
+              )}
             </form>
           </section>
         </>
       )}
+      {winner && <Winner participants={participants} />}
     </>
   );
 }
 
 export async function getStaticPaths(): Promise<any> {
-  const res: Response = await fetch("http://localhost:8100/list", {
+  const res: Response = await fetch(process.env.serverHost + "list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -212,7 +266,7 @@ export async function getStaticPaths(): Promise<any> {
 
 export async function getStaticProps(context: any): Promise<any> {
   const id = context.params.id;
-  const res: Response = await fetch("http://localhost:8100/list/", {
+  const res: Response = await fetch(process.env.serverHost + "list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

@@ -49,30 +49,43 @@
   margin-bottom: 75px;
 }
 .footer {
-  background: #000000;
   display: flex;
   justify-content: center;
+}
+.btn {
+  width: 150px;
+  height: 50px;
+  margin: 0 1vw;
+  cursor: pointer;
+  background-color: transparent;
+  text-transform: uppercase;
+  border-radius: 10px;
+  border: 2px solid #ffbd52;
+}
+.btn:hover {
+  color: #ffbd52;
 }
 .participant {
   height: 100%;
   width: 60%;
-  padding-top: 200px;
+  padding-top: 100px;
   margin: auto;
 }
 .form {
   text-align: center;
 }
 .textarea,
-.lockedText {
-  margin-top: 100px;
-  margin-bottom: 50px;
+.lockedText,
+.error {
   height: 20px;
   width: 100%;
+  margin-top: 100px;
+  margin-bottom: 50px;
+  padding: 5px;
   resize: none;
-  background: #00000020;
+  background: transparent;
   color: white;
   border: none;
-  border-bottom: 2px solid #52acfe;
   font-size: 15px;
 }
 .textarea {
@@ -81,31 +94,46 @@
 .textarea:focus {
   outline: none;
 }
-.lockedText {
+.error {
+  color: #ff4b4b;
+  border-bottom: 2px solid #ff4b4b;
+}
+.participantBtnError {
+  color: #ff4b4b;
   border: 2px solid #ff4b4b;
+}
+.lockedText {
+  border: 2px solid #ffbd52;
   pointer-events: none;
+  border-radius: 5px;
+}
+.participantBtn,
+.participantBtnLocked,
+.participantBtnError {
+  width: 150px;
+  height: 50px;
+  margin: 0 1vw;
+  cursor: pointer;
+  background-color: transparent;
+  text-transform: uppercase;
+  border-radius: 10px;
+}
+.participantBtn {
+  border: 2px solid #52acfe;
+}
+.participantBtnLocked {
+  color: #ffbd52;
+  border: 2px solid #ffbd52;
 }
 .p {
+  height: 20px;
+  width: 100%;
+  font-size: 30px;
+  margin-top: 50px;
   text-align: center;
-  font-size: 50px;
-  margin: 0;
 }
-.btn {
-  width: 100px;
-  height: 50px;
-  border: 2px solid #000000;
-  border-radius: 5px 5px 5px 5px;
-  cursor: pointer;
-  background-color: #262626;
-}
-.lockedBtn {
-  width: 100px;
-  height: 50px;
-  border: 2px solid #783635;
-  border-radius: 5px 5px 5px 5px;
-  cursor: pointer;
-  background-color: #262626;
-  pointer-events: none;
+.participantSpan {
+  color: #ffbd52;
 }
 .participantName {
   float: left;
@@ -193,15 +221,36 @@
   margin: 25px;
   padding: 10px;
   width: 350px;
-  border: 2px solid #ffbd52;
   border-radius: 25px;
   background-color: #101011;
 }
 .participantContainer {
-  border: 2px solid #ffbd52;
+  border: 2px solid #52acfe;
 }
 .participantContainerBlue {
-  border: 2px solid #52acfe;
+  border: 2px solid #ffbd52;
+}
+.barContainer {
+  background-color: #171719;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.bar {
+  width: 95vw;
+  height: 80vh;
+  padding: 1%;
+}
+.barHome {
+  font-size: 40px;
+  padding-top: 5%;
+  text-align: center;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -231,6 +280,9 @@
   }
   .participant {
     width: 80%;
+  }
+  .barHome {
+    padding-top: 10%;
   }
 }
 @media only screen and (max-width: 600px) {

@@ -11,9 +11,14 @@ function Create({ myQuiz }: any): React.ReactElement {
 
   const [slots, setSlots] = useState(slot);
   const [username, setUsername] = useState("");
+  const [filled, setFilled] = useState(false);
+  const [response, setResponse] = useState("");
 
   useEffect(() => {
     setUsername(getUsername());
+    setTimeout(() => {
+      checkForm();
+    });
   }, []);
 
   for (let i: number = 0; i < myQuiz.length; i++) {
@@ -32,6 +37,25 @@ function Create({ myQuiz }: any): React.ReactElement {
     setSlots(slot + 1);
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
+  function checkForm(): void {
+    let formData: FormData = new FormData(document.forms[0]);
+    let questionsEmpty: number = 0;
+    let answersEmpty: number = 0;
+
+    for (let key in formData.getAll("question")) {
+      if (formData.getAll("question")[key] == "") {
+        questionsEmpty++;
+      }
+      if (formData.getAll("answer")[key] == "") {
+        answersEmpty++;
+      }
+    }
+    if (questionsEmpty == 0 && answersEmpty == 0) {
+      setFilled(true);
+    } else if (questionsEmpty > 0 || answersEmpty > 0) {
+      setFilled(false);
+    }
+  }
 
   function saveQuiz(): void {
     processRequest("save");
@@ -44,7 +68,7 @@ function Create({ myQuiz }: any): React.ReactElement {
     let formData: FormData = new FormData(document.forms[0]);
 
     if (type == "save") {
-      let res: Response = await fetch("http://localhost:8100/save", {
+      let res: Response = await fetch(process.env.serverHost + "save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -54,10 +78,12 @@ function Create({ myQuiz }: any): React.ReactElement {
           answer: formData.getAll("answer"),
         }),
       });
-      let response = await res.text();
-      console.log(response);
+      setResponse(await res.text());
+      setTimeout(() => {
+        setResponse("");
+      }, 1500);
     } else if (type == "create") {
-      let res: Response = await fetch("http://localhost:8100/create", {
+      let res: Response = await fetch(process.env.serverHost + "create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -67,33 +93,52 @@ function Create({ myQuiz }: any): React.ReactElement {
           answer: formData.getAll("answer"),
         }),
       });
-      let response = await res.text();
-      console.log(response);
+      setResponse(await res.text());
+      setTimeout(() => {
+        window.location.href = "/rooms";
+      }, 1500);
     }
   }
   return (
     <>
       <HeadContainer>Create</HeadContainer>
-      <form className={styles.form}>{slotArray}</form>
+      <form className={styles.form} onChange={() => checkForm()}>
+        {slotArray}
+      </form>
       <footer className={styles.footer}>
         <Button
           title="Add"
-          className={styles.btn}
+          className={styles.addBtn}
           onClick={() => {
             setSlots(slot + 1);
             window.scrollTo(0, document.body.scrollHeight);
+            setFilled(false);
           }}
         />
-        <Button title="Undo Last" className={styles.btn} onClick={() => (slots == 1 ? console.log("no!") : setSlots(slot - 1))} />
-        <Button title="Save" className={styles.btn} onClick={saveQuiz} />
-        <Button title="Create" className={styles.btn} onClick={createQuiz} />
+        {slots == 1 ? (
+          <Button title="Locked" className={styles.undoBtn} />
+        ) : (
+          <Button
+            title="Undo Last"
+            className={styles.undoBtn}
+            onClick={() => {
+              setSlots(slot - 1),
+                setTimeout(() => {
+                  checkForm();
+                });
+            }}
+          />
+        )}
+        <Button title="Save" className={styles.saveBtn} onClick={saveQuiz} />
+        {filled ? <Button title="Create" className={styles.createBtn} onClick={createQuiz} /> : <Button title="Locked" className={styles.createBtn} />}
+        {response != "" && <div className={styles.modalText}>{response}</div>}
       </footer>
     </>
   );
 }
 
 export async function getStaticProps(): Promise<any> {
-  let res: Response = await fetch("http://localhost:8100/load", {
+  let res: Response = await fetch(process.env.serverHost + "load", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });

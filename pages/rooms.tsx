@@ -36,7 +36,7 @@ function Rooms({ quizzes }: any): React.ReactElement {
 }
 
 export async function getServerSideProps(): Promise<any> {
-  const res: Response = await fetch("http://localhost:8100/list", {
+  const res: Response = await fetch(process.env.serverHost + "list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });

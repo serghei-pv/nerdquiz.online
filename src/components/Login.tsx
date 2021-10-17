@@ -8,6 +8,7 @@ function Login(): React.ReactElement {
   const [usernameState, setUsernameState] = useState(false);
   const [passwordState, setPasswordState] = useState(false);
   const [passwordMatchState, setPasswordMatchState] = useState(false);
+  const [response, setResponse] = useState("");
 
   useEffect(() => {
     if (sessionStorage.getItem("login") == "true") {
@@ -55,27 +56,19 @@ function Login(): React.ReactElement {
   }
   function handleRegistration(): void {
     let formData: FormData = new FormData(document.forms[0]);
-    let passwordLength: number = formData.get("password")?.toString().length!;
     let usernameLength: number = formData.get("username")?.toString().length!;
+    let password: string = formData.get("password")?.toString()!;
+    let passwordConfirm: string = formData.get("passwordConfirm")?.toString()!;
 
-    if (passwordLength >= 8 && formData.get("passwordConfirm") == formData.get("password") && usernameLength >= 4) {
+    if (password == passwordConfirm && usernameLength >= 4) {
       processRequest();
-    }
-    if (!(usernameLength >= 4)) {
-      console.log("Username is too short!");
-    }
-    if (!(passwordLength >= 8)) {
-      console.log("Password is too short!");
-    }
-    if (!(formData.get("passwordConfirm") == formData.get("password"))) {
-      console.log("Passwords do not match!");
     }
   }
 
   async function processRequest(): Promise<void> {
     let formData: FormData = new FormData(document.forms[0]);
     if (!registration) {
-      let res: Response = await fetch("http://localhost:8100/login", {
+      let res: Response = await fetch(process.env.serverHost + "login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +76,7 @@ function Login(): React.ReactElement {
           password: formData.get("password"),
         }),
       });
-      let response = await res.text();
+      setResponse(await res.text());
 
       if (response == formData.get("username")) {
         sessionStorage.setItem("login", "true");
@@ -92,7 +85,7 @@ function Login(): React.ReactElement {
       }
     } else {
       if (formData.get("password") == formData.get("passwordConfirm")) {
-        let res: Response = await fetch("http://localhost:8100/register", {
+        let res: Response = await fetch(process.env.serverHost + "register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -100,15 +93,13 @@ function Login(): React.ReactElement {
             password: formData.get("password"),
           }),
         });
-        let response = await res.text();
+        setResponse(await res.text());
 
         if (response == formData.get("username")) {
           sessionStorage.setItem("login", "true");
           sessionStorage.setItem("username", response);
           window.location.reload();
         }
-      } else {
-        console.log("oink");
       }
     }
   }
@@ -147,11 +138,12 @@ function Login(): React.ReactElement {
               <input type="password" name="password" autoComplete="on" />
               <Button title="Login" className={styles.btn} onClick={handleLogin} />
               <p className={styles.p}>
-                Don&apos;t have an account?{" "}
+                Don&#39;t have an account?{" "}
                 <span onClick={() => setRegistration(!registration)} className={styles.switch}>
                   Sign in!
                 </span>
               </p>
+              {response != "" && <div className={styles.modalText}>{response}</div>}
             </form>
           )}
         </section>

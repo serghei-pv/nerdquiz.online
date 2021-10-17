@@ -47,7 +47,7 @@ nextApp.prepare().then(() => {
     getQuiz(req.body.username).then(function (data) {
       if (data != "noGet") {
         quiz.updateOne({ _id: data }, { $set: { question: req.body.question, answer: req.body.answer } });
-        res.send("saved successfully");
+        res.send("Saved successfully");
       } else {
         quiz.insertOne({ question: req.body.question, answer: req.body.answer, ready: "false", username: req.body.username });
       }
@@ -106,7 +106,6 @@ nextApp.prepare().then(() => {
           break;
 
         case "participant":
-          console.log(data.username);
           if (data.username != null) {
             let counter: number = 0;
             socket.join(data.roomnumber);
@@ -187,7 +186,7 @@ nextApp.prepare().then(() => {
           }
 
           winner.updateOne({ name: "winnerArray" }, { $push: { user: leader.username } });
-          socket.send(JSON.stringify(leader));
+          io.to(data.roomnumber).emit("winner");
           break;
       }
 
