@@ -1,13 +1,25 @@
 {
-  "name": "nextquiz",
-  "version": "1",
+  "name": "nerdquiz",
+  "description": "questions game",
+  "version": "1.0",
   "private": true,
+  "main": " dist/server.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "node dist/server.js",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serghei-pv/nextQuiz.git"
+  },
+  "author": "Serghei Pavlov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/serghei-pv/nextQuiz/issues"
+  },
+  "homepage": "https://github.com/serghei-pv/nextQuiz#readme",
   "dependencies": {
     "@types/socket.io": "^3.0.2",
     "chart.js": "^3.5.1",
@@ -31,5 +43,9 @@
     "eslint": "^7.32.0",
     "eslint-config-next": "11.1.2",
     "typescript": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
   }
 }
