@@ -32,9 +32,3 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-# .json
-tsconfig.json
-tsconfig.server.json
-tslint.json
-nodemon.json
