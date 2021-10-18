@@ -5,9 +5,9 @@
   "main": " dist/server.js",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node dist/server.js",
     "build": "next build && tsc --project tsconfig.server.json",
-    "start": "node dist/server.js -p $PORT",
+    "start": "next start",
     "lint": "next lint"
   },
   "repository": {
