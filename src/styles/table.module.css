@@ -27,6 +27,7 @@
   background-color: #171719;
 }
 .tr {
+  position: -webkit-sticky;
   position: sticky;
   background-image: linear-gradient(-45deg, #101011 46%, #171719 100%);
   top: 0;
