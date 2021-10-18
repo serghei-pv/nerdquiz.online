@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && tsc --project tsconfig.server.json",
-    "start": "node dist/server.js",
+    "start": "node dist/server.js -p $PORT",
     "lint": "next lint"
   },
   "repository": {
