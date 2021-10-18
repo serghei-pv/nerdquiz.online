@@ -96,11 +96,11 @@ nextApp.prepare().then(() => {
   app.post("/list", (req, res) => {
     getQuizAll().then(function (data) {
       if (req.body.id == undefined) {
-        res.status(200).send(JSON.stringify(data));
+        res.send(JSON.stringify(data));
       } else {
         for (let key in data) {
           if (data[key]._id == req.body.id) {
-            res.status(200).send(JSON.stringify(data[key]));
+            res.send(JSON.stringify(data[key]));
           }
         }
       }
