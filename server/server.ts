@@ -93,20 +93,19 @@ nextApp.prepare().then(() => {
     });
   });
 
-  // app.post("/list", (req, res) => {
-  //   res.setHeader("Content-Type", "application/json");
-  //   getQuizAll().then(function (data) {
-  //     if (req.body.id == undefined) {
-  //       res.status(200).send(JSON.stringify(data));
-  //     } else {
-  //       for (let key in data) {
-  //         if (data[key]._id == req.body.id) {
-  //           res.status(200).send(JSON.stringify(data[key]));
-  //         }
-  //       }
-  //     }
-  //   });
-  // });
+  app.post("/list", (req, res) => {
+    getQuizAll().then(function (data) {
+      if (req.body.id == undefined) {
+        res.status(200).send(JSON.stringify(data));
+      } else {
+        for (let key in data) {
+          if (data[key]._id == req.body.id) {
+            res.status(200).send(JSON.stringify(data[key]));
+          }
+        }
+      }
+    });
+  });
 
   const server: Http.Server = Http.createServer(app);
   const io: Server = new Server(server, {
