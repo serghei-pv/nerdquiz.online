@@ -18,7 +18,6 @@ connectToDb();
 
 let userbase: Mongo.Collection;
 let quiz: Mongo.Collection;
-let winner: Mongo.Collection;
 let allQuizzes: Quiz[];
 let participantsArray: Participant[] = [];
 
@@ -28,18 +27,36 @@ nextApp.prepare().then(() => {
   app.use(Express.json());
 
   app.post("/register", (req, res) => {
-    userbase.insertOne({
-      username: req.body.username,
-      password: req.body.password,
+    getUser(req.body.username).then(function (data) {
+      if (data == "noGet") {
+        userbase.insertOne({
+          username: req.body.username,
+          password: req.body.password,
+          wins: 0,
+          losses: 0,
+          lastWin: false,
+          lastLoss: false,
+        });
+        res.status(200).send(req.body.username);
+      } else {
+        res.status(401).send("");
+      }
     });
-    res.send(req.body.username);
   });
 
   app.post("/login", (req, res) => {
     getUser(req.body.username).then(function (data) {
       if (data[0] == req.body.username && data[1] == req.body.password) {
-        res.send(data[0]);
+        res.status(200).send(data[0]);
+      } else {
+        res.status(401).send("");
       }
+    });
+  });
+
+  app.post("/user", (_req, res) => {
+    getUserAll().then(function (data) {
+      res.status(200).send(data);
     });
   });
 
@@ -47,7 +64,7 @@ nextApp.prepare().then(() => {
     getQuiz(req.body.username).then(function (data) {
       if (data != "noGet") {
         quiz.updateOne({ _id: data }, { $set: { question: req.body.question, answer: req.body.answer } });
-        res.send("Saved successfully");
+        res.status(200).send("Saved successfully");
       } else {
         quiz.insertOne({ question: req.body.question, answer: req.body.answer, ready: "false", username: req.body.username });
       }
@@ -58,9 +75,10 @@ nextApp.prepare().then(() => {
     getQuiz(req.body.username).then(function (data) {
       if (data != "noGet") {
         quiz.updateOne({ _id: data }, { $set: { question: req.body.question, answer: req.body.answer, ready: "true" } });
-        res.send("Quiz created successfully");
+        res.status(200).send("Quiz created successfully");
       } else {
         quiz.insertOne({ question: req.body.question, answer: req.body.answer, ready: "true", username: req.body.username });
+        res.status(200).send("Quiz created successfully");
       }
     });
   });
@@ -68,9 +86,9 @@ nextApp.prepare().then(() => {
   app.post("/load", (_req, res) => {
     getQuizQA().then(function (data) {
       if (data != "noGet") {
-        res.send(JSON.stringify(data));
+        res.status(200).send(JSON.stringify(data));
       } else {
-        res.send([]);
+        res.status(200).send([]);
       }
     });
   });
@@ -78,11 +96,11 @@ nextApp.prepare().then(() => {
   app.post("/list", (req, res) => {
     getQuizAll().then(function (data) {
       if (req.body.id == undefined) {
-        res.send(JSON.stringify(data));
+        res.status(200).send(JSON.stringify(data));
       } else {
         for (let key in data) {
           if (data[key]._id == req.body.id) {
-            res.send(JSON.stringify(data[key]));
+            res.status(200).send(JSON.stringify(data[key]));
           }
         }
       }
@@ -108,30 +126,25 @@ nextApp.prepare().then(() => {
         case "participant":
           if (data.username != null) {
             let counter: number = 0;
+            let participant: Participant = {
+              username: data.username,
+              points: 0,
+              answer: "",
+              roomnumber: data.roomnumber,
+              lock: "false",
+            };
             socket.join(data.roomnumber);
 
             for (let key in participantsArray) {
               if (participantsArray[key].username == data.username) {
                 counter++;
                 if (counter == 1 && participantsArray[key].roomnumber != data.roomnumber) {
-                  participantsArray[key] = {
-                    username: data.username,
-                    points: 0,
-                    answer: "",
-                    roomnumber: data.roomnumber,
-                    lock: "false",
-                  };
+                  participantsArray[key] = participant;
                 }
               }
             }
             if (counter == 0) {
-              participantsArray.push({
-                username: data.username,
-                points: 0,
-                answer: "",
-                roomnumber: data.roomnumber,
-                lock: "false",
-              });
+              participantsArray.push(participant);
             }
           }
           break;
@@ -168,25 +181,25 @@ nextApp.prepare().then(() => {
           }
           break;
 
-        case "winner":
-          let leader: Participant = {
-            username: "",
-            points: 0,
-            answer: "",
-            roomnumber: "",
-            lock: "",
-          };
+        case "finish":
+          let leader: Participant = participantsArray[0];
+          let loser: Participant = participantsArray[0];
 
           for (let key in participantsArray) {
+            userbase.updateOne({ username: participantsArray[key].username }, { $set: { lastWin: false, lastLoss: false } });
             if (participantsArray[key].roomnumber == data.roomnumber) {
               if (participantsArray[key].points > leader.points) {
                 leader = participantsArray[key];
               }
+              if (participantsArray[key].points < loser.points) {
+                loser = participantsArray[key];
+              }
             }
           }
 
-          winner.updateOne({ name: "winnerArray" }, { $push: { user: leader.username } });
-          io.to(data.roomnumber).emit("winner");
+          userbase.updateOne({ username: leader.username }, { $set: { lastWin: true }, $inc: { wins: +1 } });
+          userbase.updateOne({ username: loser.username }, { $set: { lastLoss: true }, $inc: { losses: +1 } });
+          io.to(data.roomnumber).emit("finish");
           break;
       }
 
@@ -210,7 +223,6 @@ async function connectToDb() {
   await dbClient.connect();
   userbase = dbClient.db("nerdquiz").collection("user");
   quiz = dbClient.db("nerdquiz").collection("quizzes");
-  winner = dbClient.db("nerdquiz").collection("misc");
 }
 
 async function getUser(username: string) {
@@ -219,6 +231,15 @@ async function getUser(username: string) {
       username: username,
     });
     return [findUser.username, findUser.password];
+  } catch (e) {
+    return "noGet";
+  }
+}
+async function getUserAll() {
+  try {
+    let findUser: Mongo.Document = <Mongo.Document>userbase.find({});
+    let allUser: any[] = await findUser.toArray();
+    return allUser;
   } catch (e) {
     return "noGet";
   }

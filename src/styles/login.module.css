@@ -73,20 +73,26 @@
   outline: none;
   border-color: #ffbd52;
 }
-.btn {
+.btn,
+.errorBtn {
   position: absolute;
   bottom: 0;
   background: none;
-  border: 1px solid #ffbd52;
   border-radius: 10px 10px 10px 10px;
   margin: 100px 75px;
   width: 300px;
   height: 40px;
   cursor: pointer;
 }
+.btn {
+  border: 1px solid #ffbd52;
+}
 .btn:hover {
   background-color: #ffbd52;
   color: #101011;
+}
+.errorBtn {
+  border: 1px solid #ff4b4b;
 }
 .p {
   position: absolute;

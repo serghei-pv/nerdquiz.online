@@ -36,15 +36,18 @@
 }
 .id_th,
 .amount_th,
-.user_th {
+.user_th,
+.lossWins_th {
   color: #ffbd52;
 }
 .id_th,
 .amount_th,
 .user_th,
+.lossWins_th,
 .id,
 .amount,
-.user {
+.user,
+.lossWins {
   padding: 1%;
 }
 .user_th,
@@ -57,10 +60,14 @@
 .id {
   width: 50%;
 }
+.lossWins_th,
+.lossWins {
+  text-align: center;
+}
 
 @media only screen and (max-width: 1024px) {
   .fixed {
-    height: 70vh;
+    height: 65vh;
     width: 96vw;
     margin: 2vw;
     margin-top: 100px;

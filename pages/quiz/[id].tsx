@@ -4,7 +4,7 @@ import HeadContainer from "../../src/components/Head";
 import styles from "../../src/styles/quiz.module.css";
 import io, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
-import Winner from "../../src/components/Winner";
+import Finish from "../../src/components/Finish";
 import getUsername from "../../src/hooks/getUsername";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
@@ -15,13 +15,13 @@ function Room({ quiz }: any): React.ReactElement {
   const [question, setQuestion] = useState(0);
   const [participants, setParticipants] = useState(participantArray);
   const [points, setPoints] = useState(0);
-  const [winner, setWinner] = useState(false);
+  const [finish, setFinish] = useState(false);
   const [lock, setLock] = useState(false);
   const [textValue, setTextValue] = useState("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    let url: string = process.env.serverHost!;
+    let url: string = process.env.socketHost!;
     socket = io(url);
     return function cleanup() {
       socket.disconnect();
@@ -67,7 +67,7 @@ function Room({ quiz }: any): React.ReactElement {
   function endQuiz(): void {
     socket.send(
       JSON.stringify({
-        type: "winner",
+        type: "finish",
         roomnumber: quiz._id,
       })
     );
@@ -131,8 +131,8 @@ function Room({ quiz }: any): React.ReactElement {
         }
       }
     });
-    socket.on("winner", () => {
-      setWinner(true);
+    socket.on("finish", () => {
+      setFinish(true);
     });
     return function cleanup() {
       socket.off("update");
@@ -240,7 +240,7 @@ function Room({ quiz }: any): React.ReactElement {
           </section>
         </>
       )}
-      {winner && <Winner participants={participants} />}
+      {finish && <Finish participants={participants} />}
     </>
   );
 }

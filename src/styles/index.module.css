@@ -1,0 +1,66 @@
+.container {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  justify-content: space-evenly;
+}
+.winner {
+  border: 3px solid #3efc3e;
+}
+.wins {
+  border: 3px solid #ffbd52;
+}
+.loser {
+  border: 3px solid #ff4b4b;
+}
+.winner,
+.wins,
+.loser {
+  width: 125px;
+  border-top: none;
+  text-align: center;
+  margin: 5%;
+}
+.title {
+  font-size: 15px;
+  margin-top: -10px;
+  padding: 0 10px;
+}
+.winner .title {
+  color: #3efc3e;
+}
+.wins .title {
+  color: #ffbd52;
+}
+.loser .title {
+  color: #ff4b4b;
+}
+.data {
+  padding: 10px;
+}
+@media only screen and (max-width: 600px) {
+  .container {
+    margin-top: 10%;
+    margin-bottom: -25%;
+    width: 95%;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .winner,
+  .wins,
+  .loser {
+    width: 100px;
+  }
+  .winner {
+    order: 1;
+  }
+  .wins {
+    order: 3;
+  }
+  .loser {
+    order: 2;
+  }
+  .title {
+    font-size: 10px;
+  }
+}

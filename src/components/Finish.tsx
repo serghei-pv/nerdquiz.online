@@ -3,7 +3,7 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import styles from "../styles/quiz.module.css";
 
-function Winner({ participants }: any): React.ReactElement {
+function Finish({ participants }: any): React.ReactElement {
   let participantsName: string[] = [];
   let participantsData: number[] = [];
 
@@ -68,4 +68,4 @@ function Winner({ participants }: any): React.ReactElement {
   );
 }
 
-export default Winner;
+export default Finish;

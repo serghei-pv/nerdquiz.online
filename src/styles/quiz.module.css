@@ -121,6 +121,9 @@
 .participantBtn {
   border: 2px solid #52acfe;
 }
+.participantBtn:hover {
+  color: #52acfe;
+}
 .participantBtnLocked {
   color: #ffbd52;
   border: 2px solid #ffbd52;

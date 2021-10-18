@@ -8,7 +8,7 @@ function Login(): React.ReactElement {
   const [usernameState, setUsernameState] = useState(false);
   const [passwordState, setPasswordState] = useState(false);
   const [passwordMatchState, setPasswordMatchState] = useState(false);
-  const [response, setResponse] = useState("");
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem("login") == "true") {
@@ -67,8 +67,18 @@ function Login(): React.ReactElement {
 
   async function processRequest(): Promise<void> {
     let formData: FormData = new FormData(document.forms[0]);
+    let username: string = formData.get("username")?.toString()!;
+    let res: Response;
+    let response: string;
+
+    function setLogin(_response: string): void {
+      sessionStorage.setItem("login", "true");
+      sessionStorage.setItem("username", response);
+      window.location.reload();
+    }
+
     if (!registration) {
-      let res: Response = await fetch(process.env.serverHost + "login", {
+      res = await fetch(process.env.serverHost + "login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -76,30 +86,28 @@ function Login(): React.ReactElement {
           password: formData.get("password"),
         }),
       });
-      setResponse(await res.text());
+      response = await res.text();
 
-      if (response == formData.get("username")) {
-        sessionStorage.setItem("login", "true");
-        sessionStorage.setItem("username", response);
-        window.location.reload();
+      if (response == username) {
+        setLogin(response);
+      } else {
+        setMessage(true);
       }
     } else {
-      if (formData.get("password") == formData.get("passwordConfirm")) {
-        let res: Response = await fetch(process.env.serverHost + "register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: formData.get("username"),
-            password: formData.get("password"),
-          }),
-        });
-        setResponse(await res.text());
+      res = await fetch(process.env.serverHost + "register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.get("username"),
+          password: formData.get("password"),
+        }),
+      });
+      response = await res.text();
 
-        if (response == formData.get("username")) {
-          sessionStorage.setItem("login", "true");
-          sessionStorage.setItem("username", response);
-          window.location.reload();
-        }
+      if (response == formData.get("username")) {
+        setLogin(response);
+      } else {
+        setMessage(true);
       }
     }
   }
@@ -111,12 +119,23 @@ function Login(): React.ReactElement {
             <form className={styles.modalContent} onSubmit={handleSubmit}>
               <h2 className={styles.title}>Registration</h2>
               <label>Username</label>
-              <input type="text" name="username" onChange={checkUsername} />
+              <input
+                type="text"
+                name="username"
+                onChange={() => {
+                  checkUsername();
+                  setMessage(false);
+                }}
+              />
               <label>Password</label>
               <input type="password" name="password" autoComplete="on" onChange={checkPassword} />
               <label>Confirm Password</label>
               <input type="password" name="passwordConfirm" autoComplete="on" onChange={checkPassword} />
-              <Button title="Create Account" className={styles.btn} onClick={handleRegistration} />
+              {message ? (
+                <Button title="username already taken" className={styles.errorBtn} />
+              ) : (
+                <Button title="Create Account" className={styles.btn} onClick={handleRegistration} />
+              )}
               <ul className={styles.ul}>
                 <li className={!usernameState ? styles.hintRed : styles.hintGreen}>Username: at least 4 characters</li>
                 <li className={!passwordState ? styles.hintRed : styles.hintGreen}>Password: at least 8 characters</li>
@@ -124,7 +143,12 @@ function Login(): React.ReactElement {
               </ul>
               <p className={styles.p}>
                 Already have an account?{" "}
-                <span onClick={() => setRegistration(!registration)} className={styles.switch}>
+                <span
+                  onClick={() => {
+                    setRegistration(!registration), checkUsername(), checkPassword();
+                  }}
+                  className={styles.switch}
+                >
                   Log in!
                 </span>
               </p>
@@ -133,17 +157,38 @@ function Login(): React.ReactElement {
             <form className={styles.modalContent} onSubmit={handleSubmit}>
               <h2 className={styles.title}>Login</h2>
               <label>Username</label>
-              <input type="text" name="username" />
+              <input
+                type="text"
+                name="username"
+                onChange={() => {
+                  setMessage(false);
+                }}
+              />
               <label>Password</label>
-              <input type="password" name="password" autoComplete="on" />
-              <Button title="Login" className={styles.btn} onClick={handleLogin} />
+              <input
+                type="password"
+                name="password"
+                autoComplete="on"
+                onChange={() => {
+                  setMessage(false);
+                }}
+              />
+              {message ? (
+                <Button title="username or password wrong" className={styles.errorBtn} />
+              ) : (
+                <Button title="Login" className={styles.btn} onClick={handleLogin} />
+              )}
               <p className={styles.p}>
                 Don&#39;t have an account?{" "}
-                <span onClick={() => setRegistration(!registration)} className={styles.switch}>
-                  Sign in!
+                <span
+                  onClick={() => {
+                    setRegistration(!registration), checkUsername(), checkPassword();
+                  }}
+                  className={styles.switch}
+                >
+                  Sign up!
                 </span>
               </p>
-              {response != "" && <div className={styles.modalText}>{response}</div>}
             </form>
           )}
         </section>
