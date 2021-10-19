@@ -5,14 +5,12 @@
 .host {
   height: 100%;
   width: 100%;
-  padding-top: 75px;
 }
 .top {
-  position: fixed;
+  position: sticky;
   top: 0;
   height: 50px;
   width: 100%;
-  margin-top: 100px;
   padding-bottom: 50px;
 }
 .question,
