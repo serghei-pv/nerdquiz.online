@@ -56,11 +56,12 @@ function Login(): React.ReactElement {
   }
   function handleRegistration(): void {
     let formData: FormData = new FormData(document.forms[0]);
-    let usernameLength: number = formData.get("username")?.toString().length!;
     let password: string = formData.get("password")?.toString()!;
     let passwordConfirm: string = formData.get("passwordConfirm")?.toString()!;
+    let passwordLength: number = formData.get("password")?.toString().length!;
+    let usernameLength: number = formData.get("username")?.toString().length!;
 
-    if (password == passwordConfirm && usernameLength >= 4) {
+    if (password == passwordConfirm && passwordLength >= 8 && usernameLength >= 4) {
       processRequest();
     }
   }

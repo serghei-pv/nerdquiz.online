@@ -9,6 +9,7 @@
   letter-spacing: 1px;
 }
 html {
+  background-color: #171719;
   background-image: linear-gradient(45deg, #101011 46%, #171719 100%);
   background-attachment: fixed;
   height: 100%;
