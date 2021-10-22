@@ -33,7 +33,7 @@ function Create({ myQuiz }: any): React.ReactElement {
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
 
-  if (myQuiz.length == 0 && slot == 0) {
+  if (myQuiz.question.length == 0 && slot == 0) {
     setSlots(slot + 1);
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
