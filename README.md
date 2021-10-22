@@ -64,7 +64,7 @@ Also with answer:
 Finishing a quiz shows an animated bar graph.
 </p>
 
-![screen at the end of a quiz](docs/design/home.jpg)
+![screen at the end of a quiz](docs/design/finish.jpg)
 
 ## Author
 
