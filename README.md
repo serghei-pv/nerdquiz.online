@@ -2,10 +2,6 @@
 
 > A true online version for a nerdquiz, that my friends and I play from time to time.
 
-## Website
-
-[nerdquiz.online](www.nerdquiz.online)
-
 ## Context
 
 <p>
@@ -25,33 +21,33 @@ The [backend ](https://github.com/serghei-pv/myServer) on the other hand is bein
 <p>
 Home just displays your wins, the person who lost the last quiz and has to host the next one and the winner of the last quiz. Additionally a table shows the overall performance of all user.
 </p>
-![homepage](./docs/design/home.png)
+![homepage](docs/design/home.png)
 <p>
 The "create tab" is the place to create the quiz. For each question you get a textarea for the question and one for the answer. You can add questions, remove questions, save the current state of the quiz or create it.
 </p>
-![create quiz tab](./docs/desig/ncreate.png)
+![create quiz tab](docs/desig/ncreate.png)
 
 <p>
 Room displays all the ready to use quizzes as rooms. If you join a room you join a quiz.
 </p>
-![rooms tab](./docs/design/rooms.png)
+![rooms tab](docs/design/rooms.png)
 
 <p>
 If the quiz was made by you, it means you are the host and get the corresponding interface. Where You can click through the questions, get them displayed with the appropriate answer and also every single participant including name, points, buttons to add or subtract points, clear the locked in answer manually and the answer itself, if one was already given.
 </p>
-![host display without answers](./docs/design/host.png)
-![host display with answers](./docs/design/host2.png)
+![host display without answers](docs/design/host.png)
+![host display with answers](docs/design/host2.png)
 
 <p>
 If you aren't the host you get the participant interface. As the only thing you have to do is to answer, you get a textarea for your answers, a button to answer and a display of your points and how many questions there are.
 </p>
-![participant display no answer](./docs/design/participant.png)
-![participant display with answer](./docs/design/participant2.png)
+![participant display no answer](docs/design/participant.png)
+![participant display with answer](docs/design/participant2.png)
 
 <p>
 Finishing a quiz shows an animated bar graph.
 </p>
-![screen at the end of a quiz](./docs/design/home.png)
+![screen at the end of a quiz](docs/design/home.png)
 
 ## Author
 
