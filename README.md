@@ -43,7 +43,7 @@ If you aren't the host you get the participant interface. As the only thing you 
 </p>
 
 <p>
-Finishing a Quiz shows an animated bar graph.
+Finishing a quiz shows an animated bar graph.
 </p>
 
 ## Author
