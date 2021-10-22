@@ -3,8 +3,8 @@ import Link from "next/link";
 
 function Table({ type, props }: any): React.ReactElement {
   if (type == "topList") {
-    props.sort((a: { wins: number }, b: { wins: number }) => {
-      return b.wins - a.wins;
+    props.sort((a: { wins: number; losses: number }, b: { wins: number; losses: number }) => {
+      return b.wins - a.wins || a.losses - b.losses;
     });
   }
   return (

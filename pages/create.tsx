@@ -27,16 +27,20 @@ function Create({ myQuiz }: any): React.ReactElement {
       for (slot; slot < myQuiz.question.length; slot++) {
         slotArray.push(<Slot key={slot.toString()} slot={slot} question={myQuiz.question[slot]} answer={myQuiz.answer[slot]}></Slot>);
       }
+    } else if (i == myQuiz.length) {
     }
   }
   for (slot; slot < slots; slot++) {
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
-
-  if (myQuiz.question.length == 0 && slot == 0) {
+  if (myQuiz.question != undefined && myQuiz.question.length == 0 && slot == 0) {
     setSlots(slot + 1);
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
+  if (slot == 0) {
+    slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
+  }
+
   function add(): void {
     setSlots(slot + 1);
     window.scrollTo(0, document.body.scrollHeight);
@@ -44,8 +48,10 @@ function Create({ myQuiz }: any): React.ReactElement {
   }
   function undoLast(): void {
     setSlots(slot - 1);
-    myQuiz.question.pop();
-    myQuiz.answer.pop();
+    if (myQuiz.question != undefined) {
+      myQuiz.question.pop();
+      myQuiz.answer.pop();
+    }
     setTimeout(() => {
       checkForm();
     });
