@@ -41,13 +41,23 @@ If the quiz was made by you, it means you are the host and get the corresponding
 </p>
 
 ![host display without answers](docs/design/host.jpg)
+
+<p>
+Also with answers:
+</p>
+
 ![host display with answers](docs/design/host2.jpg)
 
 <p>
 If you aren't the host you get the participant interface. As the only thing you have to do is to answer, you get a textarea for your answers, a button to answer and a display of your points and how many questions there are.
 </p>
 
-![participant display no answer](docs/design/participant.jpgpng)
+![participant display no answer](docs/design/participant.jpg)
+
+<p>
+Also with answer:
+</p>
+
 ![participant display with answer](docs/design/participant2.jpg)
 
 <p>
