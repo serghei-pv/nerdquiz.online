@@ -29,14 +29,28 @@ function Create({ myQuiz }: any): React.ReactElement {
       }
     }
   }
-
   for (slot; slot < slots; slot++) {
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
-  if (slot == 0) {
+
+  if (myQuiz.length == 0 && slot == 0) {
     setSlots(slot + 1);
     slotArray.push(<Slot key={slot.toString()} slot={slot}></Slot>);
   }
+  function add(): void {
+    setSlots(slot + 1);
+    window.scrollTo(0, document.body.scrollHeight);
+    setFilled(false);
+  }
+  function undoLast(): void {
+    setSlots(slot - 1);
+    myQuiz.question.pop();
+    myQuiz.answer.pop();
+    setTimeout(() => {
+      checkForm();
+    });
+  }
+
   function checkForm(): void {
     let formData: FormData = new FormData(document.forms[0]);
     let questionsEmpty: number = 0;
@@ -106,29 +120,8 @@ function Create({ myQuiz }: any): React.ReactElement {
         {slotArray}
       </form>
       <footer className={styles.footer}>
-        <Button
-          title="Add"
-          className={styles.addBtn}
-          onClick={() => {
-            setSlots(slot + 1);
-            window.scrollTo(0, document.body.scrollHeight);
-            setFilled(false);
-          }}
-        />
-        {slots == 1 ? (
-          <Button title="Locked" className={styles.undoBtn} />
-        ) : (
-          <Button
-            title="Undo Last"
-            className={styles.undoBtn}
-            onClick={() => {
-              setSlots(slot - 1),
-                setTimeout(() => {
-                  checkForm();
-                });
-            }}
-          />
-        )}
+        <Button title="Add" className={styles.addBtn} onClick={add} />
+        {slot > 1 ? <Button title="Undo Last" className={styles.undoBtn} onClick={undoLast} /> : <Button title="Locked" className={styles.undoBtn} />}
         <Button title="Save" className={styles.saveBtn} onClick={saveQuiz} />
         {filled ? <Button title="Create" className={styles.createBtn} onClick={createQuiz} /> : <Button title="Locked" className={styles.createBtn} />}
         {response != "" && <div className={styles.modalText}>{response}</div>}
