@@ -22,7 +22,7 @@ export default function Home({ allUser }: any): React.ReactElement {
 
   return (
     <>
-      <HeadContainer>Home</HeadContainer>
+      <HeadContainer>Who knows the most?</HeadContainer>
       <div className={styles.container}>
         <div className={styles.winner}>
           <p className={styles.title}>Last Winner</p>
