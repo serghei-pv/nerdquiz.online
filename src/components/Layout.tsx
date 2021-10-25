@@ -4,6 +4,7 @@ import Login from "./Login";
 function Layout({ children }: any): React.ReactElement {
   return (
     <>
+      <html lang="en" />
       <Header />
       <Login />
       {children}
