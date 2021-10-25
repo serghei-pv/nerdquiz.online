@@ -3,7 +3,6 @@ import Head from "next/head";
 function HeadContainer({ children }: any): React.ReactElement {
   return (
     <Head>
-      <html lang={"en"} />
       <title>nerdQuiz | {children} </title>
       <meta name="description" content="A site for hosting self made quizzes online. To be played with friends. " />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
