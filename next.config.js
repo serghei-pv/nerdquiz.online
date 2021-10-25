@@ -6,15 +6,4 @@ module.exports = {
     // serverHost: "http://localhost:8100/",
     // socketHost: "http://localhost:8100/",
   },
-
-  i18n: {
-    locales: ["en-US", "de"],
-    defaultLocale: "en-US",
-    domains: [
-      {
-        domain: "nerdquiz.online",
-        defaultLocale: "en-US",
-      },
-    ],
-  },
 };
