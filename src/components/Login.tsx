@@ -119,19 +119,25 @@ function Login(): React.ReactElement {
           {registration ? (
             <form className={styles.modalContent} onSubmit={handleSubmit}>
               <h2 className={styles.title}>Registration</h2>
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                onChange={() => {
-                  checkUsername();
-                  setMessage(false);
-                }}
-              />
-              <label>Password</label>
-              <input type="password" name="password" autoComplete="on" onChange={checkPassword} />
-              <label>Confirm Password</label>
-              <input type="password" name="passwordConfirm" autoComplete="on" onChange={checkPassword} />
+              <label>
+                Username
+                <input
+                  type="text"
+                  name="username"
+                  onChange={() => {
+                    checkUsername();
+                    setMessage(false);
+                  }}
+                />
+              </label>
+              <label>
+                Password
+                <input type="password" name="password" autoComplete="on" onChange={checkPassword} />
+              </label>
+              <label>
+                Confirm Password
+                <input type="password" name="passwordConfirm" autoComplete="on" onChange={checkPassword} />
+              </label>
               {message ? (
                 <Button title="username already taken" className={styles.errorBtn} />
               ) : (
@@ -157,23 +163,27 @@ function Login(): React.ReactElement {
           ) : (
             <form className={styles.modalContent} onSubmit={handleSubmit}>
               <h2 className={styles.title}>Login</h2>
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                onChange={() => {
-                  setMessage(false);
-                }}
-              />
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                autoComplete="on"
-                onChange={() => {
-                  setMessage(false);
-                }}
-              />
+              <label>
+                Username
+                <input
+                  type="text"
+                  name="username"
+                  onChange={() => {
+                    setMessage(false);
+                  }}
+                />
+              </label>
+              <label>
+                Password
+                <input
+                  type="password"
+                  name="password"
+                  autoComplete="on"
+                  onChange={() => {
+                    setMessage(false);
+                  }}
+                />
+              </label>
               {message ? (
                 <Button title="username or password wrong" className={styles.errorBtn} />
               ) : (
